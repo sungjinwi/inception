@@ -2,6 +2,11 @@
 
 set -e
 
+MARIADB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+MARIADB_DATABASE=$(cat /run/secrets/db_name)
+MARIADB_USER=$(cat /run/secrets/db_user)
+MARIADB_PASSWORD=$(cat /run/secrets/db_password)
+
 if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	echo "Initializing MariaDB..."
 
