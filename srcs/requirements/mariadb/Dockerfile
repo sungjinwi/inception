@@ -17,5 +17,4 @@ EXPOSE 3306
 
 ENTRYPOINT ["setup.sh"]
 
-# parameter for ENTRYPOINT, restrict authority for mysql user
 CMD ["mariadbd-safe", "--user=mysql"]

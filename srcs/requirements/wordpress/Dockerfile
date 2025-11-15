@@ -5,7 +5,6 @@ RUN apt-get update && apt-get install -y \
 	php-mysql \
 	mariadb-client \
 	wget \
-	curl \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Increase PHP memory limit for WP-CLI

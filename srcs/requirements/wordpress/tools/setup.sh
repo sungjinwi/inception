@@ -51,5 +51,5 @@ fi
 # Ensure proper permissions
 chown -R www-data:www-data /var/www/html
 
-# Start PHP-FPM in foreground
-exec php-fpm7.4 -F
+# Execute CMD (php-fpm82 -F)
+exec "$@"
