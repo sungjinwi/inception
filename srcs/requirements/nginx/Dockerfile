@@ -1,12 +1,12 @@
-FROM alpine:3.21
+FROM debian:bullseye
 
-# without list cache
-RUN apk update && apk add --no-cache \
-nginx \
-openssl
+RUN apt-get update && apt-get install -y \
+	nginx \
+	openssl \
+	&& rm -rf /var/lib/apt/lists/*
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY conf/default.conf /etc/nginx/http.d/default.conf
+COPY conf/default.conf /etc/nginx/sites-available/default
 COPY tools/setup.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/setup.sh && setup.sh

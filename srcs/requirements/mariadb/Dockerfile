@@ -1,11 +1,11 @@
-FROM alpine:3.21
+FROM debian:bullseye
 
-RUN apk update && apk add --no-cache \
-	mariadb \
+RUN apt-get update && apt-get install -y \
+	mariadb-server \
 	mariadb-client \
-	bash
+	&& rm -rf /var/lib/apt/lists/*
 
-COPY conf/my.cnf /etc/my.cnf
+COPY conf/my.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 COPY tools/setup.sh /usr/local/bin/setup.sh
 
@@ -17,5 +17,5 @@ EXPOSE 3306
 
 ENTRYPOINT ["setup.sh"]
 
-# parameter for ENTRYPOINT
-CMD ["mariadbd-safe"]
+# parameter for ENTRYPOINT, restrict authority for mysql user
+CMD ["mariadbd-safe", "--user=mysql"]

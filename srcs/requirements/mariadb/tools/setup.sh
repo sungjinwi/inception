@@ -2,15 +2,19 @@
 
 set -e
 
-if [ -z "$(ls -A /var/lib/mysql)" ]; then
+# Check if database is not initialized (no wp database)
+if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	echo "Initializing MariaDB for the first time..."
 
-	# create system table in volume
-	mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+	# If directory is empty, install db
+	if [ -z "$(ls -A /var/lib/mysql 2>/dev/null)" ]; then
+		mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+	fi
 
-	# temporary mysqld in backgroud for settings
-	mariadbd-safe --user=mysql --nowatch &
+	# temporary mariadbd in backgroud for settings
+	mariadbd-safe --user=mysql --skip-networking &
 
+	# Wait for MariaDB to start
 	until mariadb-admin ping --silent; do 
 		sleep 2
 	done
@@ -29,14 +33,12 @@ if [ -z "$(ls -A /var/lib/mysql)" ]; then
 	FLUSH PRIVILEGES;
 	EOSQL
 
-	# terminate temporary mysql
+	# terminate temporary mariadb
 	mariadb-admin -u root -p"${MARIADB_ROOT_PASSWORD}" shutdown
 
 	echo "MariaDB initialization complete"
 
 fi
 
-# execute argument (mariadbd_safe)
+# execute argument (mariadbd-safe)
 exec "$@"
-
-
