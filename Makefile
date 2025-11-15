@@ -7,6 +7,8 @@ build:
 	cd srcs && docker compose build
 
 up:
+	@mkdir - p /home/suwi/data/mysql
+	@mkdir - p /home/suwi/data/html
 	@echo "Starting containers..."
 	cd srcs && docker compose up -d
 

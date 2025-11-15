@@ -4,10 +4,11 @@ services:
     build: ./requirements/mariadb
     image: mariadb:inception
     container_name: mariadb_inception
+    init: true
     env_file:
       - .env
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - wp_db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MARIADB_USER}", "-p${MARIADB_PASSWORD}"]
       interval: 10s
@@ -22,10 +23,11 @@ services:
     build: ./requirements/wordpress
     image: wordpress:inception
     container_name: wordpress_inception
+    init: true
     env_file:
       - .env
     volumes:
-      - wordpress_data:/var/www/html
+      - wp_websites:/var/www/html
     networks:
       - inception
     depends_on:
@@ -37,8 +39,9 @@ services:
     build: ./requirements/nginx
     image: nginx:inception
     container_name: nginx_inception
+    init: true
     volumes:
-      - wordpress_data:/var/www/html:ro
+      - wp_websites:/var/www/html:ro
     ports:
       - 4443:443
     networks:
@@ -51,7 +54,17 @@ networks:
   inception:
 
 volumes:
-  mariadb_data:
-  wordpress_data:
+  wp_db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/suwi/data/mysql
+  wp_websites:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/suwi/data/html
 
 
