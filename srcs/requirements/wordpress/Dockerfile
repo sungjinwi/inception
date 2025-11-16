@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y \
 	php-fpm \
 	php-mysql \
 	mariadb-client \
-	wget
+	wget \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Increase PHP memory limit for WP-CLI
 RUN sed -i 's/memory_limit = .*/memory_limit = 256M/' /etc/php/8.2/fpm/php.ini
