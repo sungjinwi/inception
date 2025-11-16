@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 RUN apt-get update && apt-get install -y \
 	php-fpm \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Increase PHP memory limit for WP-CLI
-RUN sed -i 's/memory_limit = .*/memory_limit = 256M/' /etc/php/7.4/fpm/php.ini
+RUN sed -i 's/memory_limit = .*/memory_limit = 256M/' /etc/php/8.2/fpm/php.ini
 
 # Download and install WP-CLI
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
@@ -16,7 +16,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 	mv wp-cli.phar /usr/local/bin/wp
 
 # Copy PHP-FPM configuration
-COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 # Copy setup script
 COPY tools/setup.sh /usr/local/bin/setup.sh
@@ -34,4 +34,4 @@ EXPOSE 9000
 
 ENTRYPOINT ["setup.sh"]
 
-CMD ["php-fpm7.4", "-F"]
+CMD ["php-fpm8.2", "-F"]

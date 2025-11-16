@@ -2,8 +2,6 @@
 
 set -e
 
-MARIADB_DATABASE=$(cat /run/secrets/db_name)
-MARIADB_USER=$(cat /run/secrets/db_user)
 MARIADB_PASSWORD=$(cat /run/secrets/db_password)
 WORDPRESS_ADMIN_USER=$(cat /run/secrets/wp_admin_user)
 WORDPRESS_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
