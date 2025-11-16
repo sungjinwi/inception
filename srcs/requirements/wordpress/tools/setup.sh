@@ -8,15 +8,6 @@ WORDPRESS_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 WORDPRESS_ADMIN_EMAIL=$(cat /run/secrets/wp_admin_email)
 WORDPRESS_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
-# Wait for MariaDB to be ready
-echo "Waiting for MariaDB to be ready..."
-until mariadb -h ${MARIADB_HOST} -u ${MARIADB_USER} -p${MARIADB_PASSWORD} -e "SELECT 1" > /dev/null 2>&1; do
-	echo "MariaDB is unavailable - sleeping"
-	sleep 3
-done
-
-echo "MariaDB is ready!"
-
 # Check if WordPress is already installed
 if [ ! -f /var/www/html/wp-config.php ]; then
 	echo "Installing WordPress..."

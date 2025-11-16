@@ -1,4 +1,4 @@
-.PHONY: all build up down clean fclean re logs ps
+.PHONY: all build ssl up clean fclean re 
 
 all: build up
 

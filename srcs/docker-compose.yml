@@ -14,13 +14,18 @@ services:
       - wp_db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "sh", "-c", "mariadb-admin ping -h localhost -u $MARIADB_USER -p$(cat /run/secrets/db_password)"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
       start_period: 30s
     networks:
       - inception
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   wp:
     build: ./requirements/wordpress
@@ -39,10 +44,21 @@ services:
       - wp_websites:/var/www/html
     networks:
       - inception
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ss -lnt | grep ':9000 '"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web:
     build: ./requirements/nginx
@@ -59,8 +75,14 @@ services:
     networks:
       - inception
     depends_on:
-      - wp
+      wp:
+        condition: service_healthy
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   inception:

@@ -14,14 +14,23 @@ if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	# temporary mariadbd in background for restricted authority
 	mariadbd-safe --user=mysql --skip-networking &
 
+	TIMEOUT=30
+	COUNTER=0
+	echo "Waiting tmp MariaDB to start..."
 	until mariadb-admin ping --silent; do 
+		COUNTER=$((COUNTER+1))
+		if [ $COUNTER -gt $TIMEOUT ]; then
+			echo "Error: MariaDB failed to start within $((TIMEOUT*2)) seconds"
+			exit 1
+		fi
 		sleep 2
 	done
+	echo "tmp MariaDB is ready!"
 
 	mariadb -u root <<-EOSQL
 	ALTER USER 'root'@'localhost' IDENTIFIED BY '${MARIADB_ROOT_PASSWORD}';
-	DELETE FROM mysql.user WHERE User='';
 	DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+	DROP DATABASE test;
 	FLUSH PRIVILEGES;
 
 	CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};
@@ -33,5 +42,7 @@ if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	mariadb-admin -u root -p"${MARIADB_ROOT_PASSWORD}" shutdown
 	echo "MariaDB initialization complete"
 fi
+
+echo "Starting Mariadb..."
 
 exec "$@"
