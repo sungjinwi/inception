@@ -1,6 +1,7 @@
 FROM debian:bookworm
 
 RUN apt-get update && apt-get install -y \
+	ca-certificates \
 	php-fpm \
 	php-mysql \
 	iproute2 \

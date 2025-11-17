@@ -30,7 +30,6 @@ if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	mariadb -u root <<-EOSQL
 	ALTER USER 'root'@'localhost' IDENTIFIED BY '${MARIADB_ROOT_PASSWORD}';
 	DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-	DROP DATABASE test;
 	FLUSH PRIVILEGES;
 
 	CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};
