@@ -13,7 +13,7 @@ services:
     volumes:
       - wp_db:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "sh", "-c", "mariadb-admin ping -h suwi.42.fr -u $MARIADB_USER -p$(cat /run/secrets/db_password)"]
+      test: ["CMD", "sh", "-c", "mariadb-admin ping -h localhost -u $MARIADB_USER -p$(cat /run/secrets/db_password)"]
       interval: 5s
       timeout: 5s
       retries: 5
