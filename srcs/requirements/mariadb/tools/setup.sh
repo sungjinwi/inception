@@ -8,6 +8,7 @@ MARIADB_PASSWORD=$(cat /run/secrets/db_password)
 if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	echo "Initializing MariaDB..."
 
+	# install mariadb with owner mysql
 	if [ -z "$(ls -A /var/lib/mysql)" ]; then
 		mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 	fi
@@ -32,8 +33,8 @@ if [ ! -d "/var/lib/mysql/${MARIADB_DATABASE}" ]; then
 	DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 	FLUSH PRIVILEGES;
 
-	CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};
-	CREATE USER IF NOT EXISTS '${MARIADB_USER}'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}';
+	CREATE DATABASE ${MARIADB_DATABASE};
+	CREATE USER '${MARIADB_USER}'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}';
 	GRANT ALL PRIVILEGES ON ${MARIADB_DATABASE}.* TO '${MARIADB_USER}'@'%';
 	FLUSH PRIVILEGES;
 	EOSQL

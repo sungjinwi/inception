@@ -13,7 +13,7 @@ ssl:
 		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 			-keyout secrets/ssl_key.key \
 			-out secrets/ssl_cert.crt \
-			-subj "/C=KR/ST=Gyeongbuk/L=Gyeongsan/O=42Gyeongsan/CN=localhost" > /dev/null 2>&1; \
+			-subj "/C=KR/ST=Gyeongbuk/L=Gyeongsan/O=42Gyeongsan/CN=suwi.42.fr" > /dev/null 2>&1; \
 		echo "SSL certificate created."; \
 	else \
 		echo "SSL certificate already exists."; \

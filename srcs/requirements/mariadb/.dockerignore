@@ -1,8 +1,2 @@
-# Docker files
 Dockerfile
 .dockerignore
-docker-compose.yml
-
-.git/
-.env
-*.log
